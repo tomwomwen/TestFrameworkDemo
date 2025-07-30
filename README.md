@@ -2,207 +2,191 @@
 
 ## 项目简介
 
-这是一个基于Python的Web自动化测试框架，采用POM（Page Object Model）设计模式，支持数据驱动测试，能够生成专业的HTML测试报告。
+基于Python开发的Web自动化测试框架，采用POM（Page Object Model）设计模式，支持数据驱动测试和代码覆盖率统计，能够生成专业的HTML测试报告。
 
 ## 技术栈
 
 - **测试框架**: Pytest
-- **Web自动化**: Selenium WebDriver  
+- **Web自动化**: Selenium WebDriver
 - **设计模式**: POM (Page Object Model)
-- **数据驱动**: CSV + Faker
+- **数据驱动**: CSV文件 + Python数据工厂
 - **测试报告**: pytest-html + pytest-cov
-- **API测试**: Requests
+- **代码覆盖率**: Coverage.py
 - **版本控制**: Git
 
 ## 项目结构
 
 ```
 TestFrameworkDemo/
-├── pages/                    # 页面对象层
-│   ├── __init__.py
-│   ├── base_page.py         # 基础页面类
-│   └── baidu_page.py        # 百度页面类
-├── tests/                   # 测试用例层
-│   ├── __init__.py
-│   ├── test_demo.py         # 基础测试
-│   ├── test_web_ui.py       # Web UI测试
-│   ├── test_api.py          # API测试
-│   └── test_data_driven.py  # 数据驱动测试
-├── utils/                   # 工具类
-│   ├── __init__.py
-│   ├── test_helpers.py      # 测试辅助工具
-│   └── data_factory.py      # 测试数据工厂
-├── data/                    # 测试数据
-│   └── test_data.csv        # CSV测试数据
-├── reports/                 # 测试报告
-│   └── report.html          # HTML测试报告
-├── requirements.txt         # 依赖文件
-├── pytest.ini             # pytest配置
-└── conftest.py            # pytest全局配置
+├── pages/                   # 页面对象层
+│   ├── base_page.py        # 基础页面类
+│   └── baidu_page.py       # 百度页面类
+├── tests/                  # 测试用例层
+│   ├── test_web_ui.py      # Web UI测试
+│   ├── test_api.py         # API接口测试
+│   ├── test_data_driven.py # 数据驱动测试
+│   └── test_first.py       # 基础测试用例
+├── data/                   # 测试数据
+│   ├── data_factory.py     # 测试数据工厂
+│   └── test_data.csv       # CSV测试数据
+├── utils/                  # 工具类
+├── config/                 # 配置文件
+├── reports/                # 测试报告输出目录
+├── .gitignore             # Git忽略文件配置
+├── README.md              # 项目说明文档
+├── requirements.txt       # Python依赖包
+├── conftest.py           # Pytest全局配置
+└── .coverage             # 代码覆盖率数据
 ```
 
-## 快速开始
+## 环境准备
 
-### 1. 环境准备
+### 1. Python环境
+- Python 3.7+
+- pip包管理工具
+
+### 2. 安装项目依赖
 ```bash
 # 克隆项目
-git clone [your-repo-url]
+git clone https://github.com/tomwomwen/TestFrameworkDemo.git
 cd TestFrameworkDemo
+
+# 创建虚拟环境（推荐）
+python -m venv .venv
+
+# 激活虚拟环境
+# Windows:
+.venv\Scripts\activate
+# macOS/Linux:
+source .venv/bin/activate
 
 # 安装依赖
 pip install -r requirements.txt
-
-# 下载ChromeDriver（确保版本匹配）
 ```
 
-### 2. 运行测试
-```bash
-# 运行所有测试
-pytest
+### 3. 浏览器驱动
+- 下载对应版本的ChromeDriver
+- 确保ChromeDriver在系统PATH中
 
-# 运行特定测试文件
+## 使用方法
+
+### 运行所有测试
+```bash
+pytest
+```
+
+### 运行指定测试文件
+```bash
+# 运行Web UI测试
 pytest tests/test_web_ui.py
 
-# 生成HTML报告
-pytest --html=reports/report.html
+# 运行API测试
+pytest tests/test_api.py
 
-# 生成覆盖率报告
-pytest --cov=pages --cov=utils --cov-report=html
+# 运行数据驱动测试
+pytest tests/test_data_driven.py
 ```
 
-## 项目特色
+### 生成测试报告
+```bash
+# 生成HTML测试报告
+pytest --html=reports/report.html --self-contained-html
+
+# 生成代码覆盖率报告
+pytest --cov=pages --cov=utils --cov-report=html --cov-report=term
+```
+
+### 查看覆盖率数据
+```bash
+# 查看覆盖率统计
+coverage report
+
+# 生成HTML覆盖率报告
+coverage html
+```
+
+## 框架特色
 
 ### POM设计模式
-- **BasePage**: 封装通用页面操作方法
-- **具体页面类**: 继承BasePage，定义页面特有元素和操作
-- **测试用例**: 调用页面类方法，保持简洁
+- **BasePage基础类**: 封装通用的页面操作方法
+- **页面类继承**: 各页面类继承BasePage，实现页面特有功能
+- **测试用例分离**: 测试逻辑与页面操作分离，提高可维护性
 
 ### 数据驱动测试
-- **数据工厂**: 动态生成测试数据
-- **CSV文件**: 管理静态测试数据
-- **参数化测试**: 支持批量测试执行
+- **数据工厂模式**: 动态生成各种类型的测试数据
+- **CSV数据管理**: 静态测试数据通过CSV文件管理
+- **参数化测试**: 支持pytest.mark.parametrize批量测试
 
-### 专业测试报告
-- **HTML报告**: 可视化测试结果
-- **覆盖率统计**: 代码覆盖情况分析
-- **详细日志**: 完整的测试执行记录
+### 完善的测试报告
+- **HTML可视化报告**: 清晰展示测试结果和失败详情
+- **代码覆盖率统计**: 实时监控测试覆盖情况
+- **详细执行日志**: 完整记录测试执行过程
 
-## 测试用例说明
+## 测试用例类型
 
-### Web UI测试
-- 百度搜索功能测试
-- 多关键词搜索验证
-- 搜索结果页面检查
+### Web UI自动化测试
+- 页面元素定位和操作
+- 表单填写和提交验证
+- 页面跳转和内容检查
+- 多浏览器兼容性测试
 
-### API测试
-- HTTP请求状态码验证
-- JSON响应数据检查
-- 接口异常处理测试
+### API接口测试
+- HTTP请求发送和响应验证
+- JSON数据格式检查
+- 接口状态码验证
+- 异常情况处理测试
 
 ### 数据驱动测试
-- CSV文件数据读取
-- 参数化测试执行
-- 批量数据验证
+- 批量测试数据执行
+- 边界值和异常数据测试
+- 多场景参数化验证
 
-## 配置说明
+## 配置文件说明
 
-### pytest.ini配置
+### pytest.ini
 ```ini
 [tool:pytest]
 testpaths = tests
 python_files = test_*.py
 python_classes = Test*
 python_functions = test_*
-addopts = -v --tb=short
+addopts = -v --tb=short --strict-markers
 log_cli = true
 log_cli_level = INFO
 ```
 
-### requirements.txt
-```
-pytest==8.4.1
-pytest-html==4.1.1
-pytest-cov==4.0.0
-selenium==4.15.0
-requests==2.31.0
-faker==20.1.0
-```
-
-## 开发者说明
-
-这个项目展示了：
-- 标准的自动化测试框架设计
-- POM设计模式的实际应用
-- 数据驱动测试的实现方法
-- 专业测试报告的生成
-
-适合用于：
-- Python自动化测试学习
-- 企业级测试框架参考
-- 面试项目展示
+### conftest.py
+包含pytest全局配置和fixture定义
 
 ## 项目亮点
 
-1. **设计模式**: 采用POM模式，代码维护性强
-2. **数据驱动**: 支持CSV和动态数据生成
-3. **报告完善**: HTML报告 + 覆盖率统计
-4. **结构清晰**: 分层设计，职责明确
-5. **易于扩展**: 新增页面和测试用例简单
+1. **标准POM架构**: 采用业界标准的页面对象模式
+2. **完整测试覆盖**: Web UI + API + 数据驱动测试
+3. **专业报告系统**: HTML报告 + 覆盖率统计
+4. **模块化设计**: 清晰的分层架构，易于维护和扩展
+5. **配置化管理**: 灵活的配置文件和环境管理
+6. **版本控制集成**: 完善的Git配置和.gitignore规则
 
-## 使用场景
+## 扩展开发
 
-- **学习用途**: Python自动化测试入门项目
-- **企业参考**: 测试框架设计规范示例
-- **面试展示**: 完整的项目经验证明
-- **扩展开发**: 可基于此框架开发更复杂功能
+### 添加新的页面对象
+1. 在`pages/`目录下创建新的页面类
+2. 继承`BasePage`基础类
+3. 定义页面特有的元素定位和操作方法
 
-## 技术实现要点
+### 添加新的测试用例
+1. 在`tests/`目录下创建测试文件
+2. 导入对应的页面对象类
+3. 编写测试方法，调用页面对象的方法
 
-### 页面对象模式实现
-```python
-# BasePage基础类设计
-class BasePage:
-    def __init__(self, driver):
-        self.driver = driver
-        self.logger = logging.getLogger(__name__)
-    
-    def find_element(self, locator, timeout=10):
-        # 元素定位方法
-        pass
-    
-    def click(self, locator):
-        # 点击操作
-        pass
-```
+### 扩展数据工厂
+1. 在`data/data_factory.py`中添加新的数据生成方法
+2. 支持更多类型的测试数据生成
 
-### 数据驱动测试实现
-```python
-# pytest参数化装饰器使用
-@pytest.mark.parametrize("keyword,expected", [
-    ("Python", "Python"),
-    ("自动化测试", "自动化测试"),
-    ("Selenium", "Selenium")
-])
-def test_search(keyword, expected):
-    # 测试逻辑
-    pass
-```
+## 最佳实践
 
-### 测试报告配置
-```python
-# conftest.py配置示例
-@pytest.fixture(scope="session")
-def driver():
-    driver = webdriver.Chrome()
-    yield driver
-    driver.quit()
-```
-
-## 联系方式
-
-如有问题，欢迎交流讨论！
-
----
-**项目创建时间**: 2025年  
-**技术水平**: 中级  
-**适用场景**: Web自动化测试、学习项目、面试展示
+- 保持页面对象类的简洁，只包含页面相关的操作
+- 测试用例应该独立，不依赖其他测试的执行结果
+- 使用有意义的断言消息，便于问题定位
+- 定期更新依赖包版本，确保安全性
+- 遵循Python PEP8编码规范
