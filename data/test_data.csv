@@ -1,0 +1,11 @@
+keyword,expected_result,test_type
+Python,Python,programming
+Java,Java,programming
+人工智能,人工智能,technology
+大数据,大数据,technology
+北京,北京,location
+上海,上海,location
+selenium,selenium,tool
+pytest,pytest,tool
+自动化测试,自动化测试,concept
+性能测试,性能测试,concept
